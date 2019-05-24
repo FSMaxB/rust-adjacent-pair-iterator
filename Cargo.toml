@@ -1,13 +1,12 @@
 [package]
-name = "pair-iterator"
+name = "adjacent-pair-iterator"
 version = "0.1.0"
 authors = ["Max Bruckner <max@maxbruckner.de>"]
 edition = "2018"
 license = "ISC"
-license-file = "LICENSE.txt"
 homepage = "https://github.com/FSMaxB/rust-pair-iterator"
 repository = "https://github.com/FSMaxB/rust-pair-iterator"
-keywords = ["iterator", "iter", "pair"]
+keywords = ["iterator", "iter", "pair", "adjacent"]
 description = "An iterator over adjacent pairs in another iterator."
 
 [dependencies]

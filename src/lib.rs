@@ -1,5 +1,5 @@
 /*
- * pair-iterator
+ * adjacent-pair-iterator
  *
  * Copyright (C) 2019 Max Bruckner (FSMaxB)
  *
@@ -15,21 +15,21 @@
  * OF THIS SOFTWARE.
  */
 
-pub struct Pairs<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> {
+pub struct AdjacentPairs<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> {
 	iterator: IteratorType,
 	last_item: Option<ItemType>,
 }
 
-impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> Pairs<IteratorType, ItemType> {
-	fn new(iterator: IteratorType) -> Pairs<IteratorType, ItemType> {
-		Pairs {
+impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> AdjacentPairs<IteratorType, ItemType> {
+	fn new(iterator: IteratorType) -> AdjacentPairs<IteratorType, ItemType> {
+		AdjacentPairs {
 			iterator,
 			last_item: None,
 		}
 	}
 }
 
-impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> Iterator for Pairs<IteratorType, ItemType> {
+impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> Iterator for AdjacentPairs<IteratorType, ItemType> {
 	type Item = (ItemType, ItemType);
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -44,30 +44,30 @@ impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> Iterator for Pair
 	}
 }
 
-pub trait PairIterator {
+pub trait AdjacentPairIterator {
 	type Item: Clone;
 	type Iterator: Iterator<Item = Self::Item>;
 
-	fn pairs(self) -> Pairs<Self::Iterator, Self::Item>;
+	fn adjacent_pairs(self) -> AdjacentPairs<Self::Iterator, Self::Item>;
 }
 
-impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> PairIterator for IteratorType {
+impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> AdjacentPairIterator for IteratorType {
 	type Item = ItemType;
 	type Iterator = Self;
 
-	fn pairs(self) -> Pairs<Self::Iterator, Self::Item> {
-		Pairs::new(self)
+	fn adjacent_pairs(self) -> AdjacentPairs<Self::Iterator, Self::Item> {
+		AdjacentPairs::new(self)
 	}
 }
 
 #[cfg(test)]
 mod tests {
-	use crate::PairIterator;
+	use crate::AdjacentPairIterator;
 
 	#[test]
 	fn should_provide_nothing_without_items() {
 		let array: [i32; 0] = [];
-		let mut iterator = array.iter().pairs();
+		let mut iterator = array.iter().adjacent_pairs();
 
 		assert_eq!(None, iterator.next());
 	}
@@ -75,7 +75,7 @@ mod tests {
 	#[test]
 	fn should_provide_nothing_for_only_one_input() {
 		let array = [1];
-		let mut iterator = array.iter().pairs();
+		let mut iterator = array.iter().adjacent_pairs();
 
 		assert_eq!(None, iterator.next());
 	}
@@ -83,7 +83,7 @@ mod tests {
 	#[test]
 	fn should_provide_pair_for_two_inputs() {
 		let array = [1, 2];
-		let mut iterator = array.iter().pairs();
+		let mut iterator = array.iter().adjacent_pairs();
 
 		assert_eq!(Some((&1, &2)), iterator.next());
 		assert_eq!(None, iterator.next());
@@ -92,7 +92,7 @@ mod tests {
 	#[test]
 	fn should_provide_two_pairs_for_three_inputs() {
 		let array = [1, 2, 3];
-		let mut iterator = array.iter().pairs();
+		let mut iterator = array.iter().adjacent_pairs();
 
 		assert_eq!(Some((&1, &2)), iterator.next());
 		assert_eq!(Some((&2, &3)), iterator.next());
@@ -102,7 +102,7 @@ mod tests {
 	#[test]
 	fn should_provide_many_pairs() {
 		let array = [1, 2, 3, 4, 5, 6];
-		let mut iterator = array.iter().pairs();
+		let mut iterator = array.iter().adjacent_pairs();
 
 		assert_eq!(Some((&1, &2)), iterator.next());
 		assert_eq!(Some((&2, &3)), iterator.next());
@@ -115,7 +115,7 @@ mod tests {
 	#[test]
 	fn should_work_with_into_iterator() {
 		let vector = vec![1, 2, 3];
-		let mut iterator = vector.into_iter().pairs();
+		let mut iterator = vector.into_iter().adjacent_pairs();
 
 		assert_eq!(Some((1, 2)), iterator.next());
 		assert_eq!(Some((2, 3)), iterator.next());
