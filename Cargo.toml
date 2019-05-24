@@ -3,5 +3,9 @@ name = "pair-iterator"
 version = "0.1.0"
 authors = ["Max Bruckner <max@maxbruckner.de>"]
 edition = "2018"
+homepage = "https://github.com/FSMaxB/rust-pair-iterator"
+repository = "https://github.com/FSMaxB/rust-pair-iterator"
+keywords = ["iterator", "iter", "pair"]
+description = "An iterator over adjacent pairs in another iterator."
 
 [dependencies]
