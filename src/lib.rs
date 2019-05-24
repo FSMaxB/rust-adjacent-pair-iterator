@@ -1,9 +1,9 @@
-pub struct Pairs<IteratorType: Iterator<Item = ItemType>, ItemType: Copy> {
+pub struct Pairs<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> {
 	iterator: IteratorType,
 	last_item: Option<ItemType>,
 }
 
-impl<IteratorType: Iterator<Item = ItemType>, ItemType: Copy> Pairs<IteratorType, ItemType> {
+impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> Pairs<IteratorType, ItemType> {
 	fn new(iterator: IteratorType) -> Pairs<IteratorType, ItemType> {
 		Pairs {
 			iterator,
@@ -12,7 +12,7 @@ impl<IteratorType: Iterator<Item = ItemType>, ItemType: Copy> Pairs<IteratorType
 	}
 }
 
-impl<IteratorType: Iterator<Item = ItemType>, ItemType: Copy> Iterator for Pairs<IteratorType, ItemType> {
+impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> Iterator for Pairs<IteratorType, ItemType> {
 	type Item = (ItemType, ItemType);
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -21,13 +21,13 @@ impl<IteratorType: Iterator<Item = ItemType>, ItemType: Copy> Iterator for Pairs
 }
 
 pub trait PairIterator {
-	type Item: Copy;
+	type Item: Clone;
 	type Iterator: Iterator<Item = Self::Item>;
 
 	fn pairs(self) -> Pairs<Self::Iterator, Self::Item>;
 }
 
-impl<IteratorType: Iterator<Item = ItemType>, ItemType: Copy> PairIterator for IteratorType {
+impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> PairIterator for IteratorType {
 	type Item = ItemType;
 	type Iterator = Self;
 
