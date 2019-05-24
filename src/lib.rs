@@ -71,4 +71,14 @@ mod tests {
 		assert_eq!(Some((&1, &2)), iterator.next());
 		assert_eq!(None, iterator.next());
 	}
+
+	#[test]
+	fn should_provide_two_pairs_for_three_inputs() {
+		let array = [1, 2, 3];
+		let mut iterator = array.iter().pairs();
+
+		assert_eq!(Some((&1, &2)), iterator.next());
+		assert_eq!(Some((&2, &3)), iterator.next());
+		assert_eq!(None, iterator.next());
+	}
 }
