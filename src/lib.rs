@@ -16,7 +16,14 @@ impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> Iterator for Pair
 	type Item = (ItemType, ItemType);
 
 	fn next(&mut self) -> Option<Self::Item> {
-		None
+		let last_item = match self.last_item.take() {
+			Some(item) => item,
+			None => self.iterator.next()?,
+		};
+
+		let current_item = self.iterator.next()?;
+		self.last_item = Some(current_item.clone());
+		Some((last_item, current_item))
 	}
 }
 
@@ -56,4 +63,12 @@ mod tests {
 		assert_eq!(None, iterator.next());
 	}
 
+	#[test]
+	fn should_provide_pair_for_two_inputs() {
+		let array = [1, 2];
+		let mut iterator = array.iter().pairs();
+
+		assert_eq!(Some((&1, &2)), iterator.next());
+		assert_eq!(None, iterator.next());
+	}
 }
