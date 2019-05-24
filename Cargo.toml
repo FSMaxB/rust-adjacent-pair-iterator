@@ -1,6 +1,6 @@
 [package]
 name = "adjacent-pair-iterator"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Max Bruckner <max@maxbruckner.de>"]
 edition = "2018"
 license = "ISC"
