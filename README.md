@@ -7,7 +7,7 @@ Usage
 -----
 ```toml
 [dependencies]
-adjacent-pair-iterator = "0.1.0"
+adjacent-pair-iterator = "0.1.2"
 ```
 
 ```rust
@@ -20,6 +20,9 @@ fn main() {
 
     for pair in array.iter().adjacent_pairs() {
         println!("{:?}", pair);
+        // (1, 2)
+        // (2, 3)
+        // (3, 4)
     }
 }
 ```
