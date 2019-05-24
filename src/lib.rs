@@ -41,6 +41,14 @@ mod tests {
     use crate::PairIterator;
 
     #[test]
+    fn should_provide_nothing_without_items() {
+        let array: [i32; 0] = [];
+        let mut iterator = array.iter().pairs();
+
+        assert_eq!(None, iterator.next());
+    }
+
+    #[test]
     fn should_provide_nothing_for_only_one_input() {
         let array = [1];
         let mut iterator = array.iter().pairs();
