@@ -94,4 +94,14 @@ mod tests {
 		assert_eq!(Some((&5, &6)), iterator.next());
 		assert_eq!(None, iterator.next());
 	}
+
+	#[test]
+	fn should_work_with_into_iterator() {
+		let vector = vec![1, 2, 3];
+		let mut iterator = vector.into_iter().pairs();
+
+		assert_eq!(Some((1, 2)), iterator.next());
+		assert_eq!(Some((2, 3)), iterator.next());
+		assert_eq!(None, iterator.next());
+	}
 }
