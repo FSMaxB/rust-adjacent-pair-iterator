@@ -81,4 +81,17 @@ mod tests {
 		assert_eq!(Some((&2, &3)), iterator.next());
 		assert_eq!(None, iterator.next());
 	}
+
+	#[test]
+	fn should_provide_many_pairs() {
+		let array = [1, 2, 3, 4, 5, 6];
+		let mut iterator = array.iter().pairs();
+
+		assert_eq!(Some((&1, &2)), iterator.next());
+		assert_eq!(Some((&2, &3)), iterator.next());
+		assert_eq!(Some((&3, &4)), iterator.next());
+		assert_eq!(Some((&4, &5)), iterator.next());
+		assert_eq!(Some((&5, &6)), iterator.next());
+		assert_eq!(None, iterator.next());
+	}
 }
