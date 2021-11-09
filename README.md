@@ -1,5 +1,5 @@
 # adjacent-pair-iterator
-A library that takes an iterator and turns it into an iterator over adjacent pairs.
+A `#![no_std]` library that takes an iterator and turns it into an iterator over adjacent pairs.
 
 ## Minimum rust version (MSRV)
 This library works with Rust versions since 1.31.

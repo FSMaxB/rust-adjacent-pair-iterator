@@ -1,3 +1,4 @@
+#![no_std]
 #![deny(clippy::all)]
 #![deny(clippy::pedantic)]
 #![deny(warnings)]
@@ -17,8 +18,11 @@
 //!
 //! assert_eq!(None, iterator.next());
 //! ```
-use std::fmt::{Debug, Formatter};
-use std::iter::FusedIterator;
+use core::fmt::{Debug, Formatter};
+use core::iter::FusedIterator;
+
+#[cfg(test)]
+mod test_helpers;
 
 #[derive(Clone)]
 pub struct AdjacentPairs<IteratorType: Iterator> {
@@ -79,7 +83,7 @@ impl<IteratorType> Debug for AdjacentPairs<IteratorType>
 where
 	IteratorType: Iterator + Debug,
 {
-	fn fmt(&self, formatter: &mut Formatter) -> std::fmt::Result {
+	fn fmt(&self, formatter: &mut Formatter) -> core::fmt::Result {
 		formatter
 			.debug_struct("AdjacentPairs")
 			.field("iterator", &self.iterator)
@@ -131,6 +135,8 @@ where
 
 #[cfg(test)]
 mod tests {
+	use crate::test_helpers::iterator::NoStdIntoIterator;
+	use crate::test_helpers::string::NoStdString;
 	use crate::{AdjacentPairIterator, AdjacentPairs};
 
 	#[test]
@@ -183,11 +189,10 @@ mod tests {
 
 	#[test]
 	fn should_work_with_into_iterator() {
-		let vector = vec![1, 2, 3];
-		let mut iterator = vector.adjacent_pairs();
+		let iterable = NoStdIntoIterator::from([1, 2]);
+		let mut iterator = iterable.adjacent_pairs();
 
 		assert_eq!(Some((1, 2)), iterator.next());
-		assert_eq!(Some((2, 3)), iterator.next());
 		assert_eq!(None, iterator.next());
 	}
 
@@ -213,7 +218,8 @@ mod tests {
 		let array = [1, 2];
 		let iterator = array.iter().adjacent_pairs();
 
-		assert_eq!("AdjacentPairs { iterator: Iter([1, 2]) }", format!("{:?}", iterator));
+		let debug_output = NoStdString::format(format_args!("{:?}", iterator)).unwrap();
+		assert_eq!("AdjacentPairs { iterator: Iter([1, 2]) }", debug_output);
 
 		// NOTE: With stripped commas because this changed between 1.31 and now (1.56)
 		let expected_pretty_debug_output = r#"AdjacentPairs {
@@ -224,14 +230,16 @@ mod tests {
         ]
     )
 }"#;
-		let pretty_debug_output_without_commas = format!("{:#?}", iterator).replace(',', "");
+		let pretty_debug_output_without_commas = NoStdString::format(format_args!("{:#?}", iterator))
+			.unwrap()
+			.removing(b',');
 		assert_eq!(expected_pretty_debug_output, pretty_debug_output_without_commas);
 	}
 
 	#[test]
 	fn should_convert_from_iterable() {
-		let vector = vec![1, 2];
-		let mut iterator: AdjacentPairs<_> = From::from(vector);
+		let iterable = NoStdIntoIterator::from([1, 2]);
+		let mut iterator: AdjacentPairs<_> = From::from(iterable);
 		assert_eq!(Some((1, 2)), iterator.next());
 	}
 }
