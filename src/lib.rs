@@ -1,3 +1,5 @@
+use std::iter::FusedIterator;
+
 #[derive(Clone)]
 pub struct AdjacentPairs<IteratorType: Iterator> {
 	iterator: IteratorType,
@@ -47,6 +49,20 @@ where
 			upper.map(|upper| self.remaining_pairs_for_given_size(upper)),
 		)
 	}
+}
+
+impl<IteratorType> FusedIterator for AdjacentPairs<IteratorType>
+where
+	IteratorType: FusedIterator,
+	IteratorType::Item: Clone,
+{
+}
+
+impl<IteratorType> ExactSizeIterator for AdjacentPairs<IteratorType>
+where
+	IteratorType: ExactSizeIterator,
+	IteratorType::Item: Clone,
+{
 }
 
 pub trait AdjacentPairIterator {
