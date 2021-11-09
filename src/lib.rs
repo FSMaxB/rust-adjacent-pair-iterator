@@ -1,3 +1,4 @@
+use std::fmt::{Debug, Formatter};
 use std::iter::FusedIterator;
 
 #[derive(Clone)]
@@ -48,6 +49,18 @@ where
 			self.remaining_pairs_for_given_size(lower),
 			upper.map(|upper| self.remaining_pairs_for_given_size(upper)),
 		)
+	}
+}
+
+impl<IteratorType> Debug for AdjacentPairs<IteratorType>
+where
+	IteratorType: Iterator + Debug,
+{
+	fn fmt(&self, formatter: &mut Formatter) -> std::fmt::Result {
+		formatter
+			.debug_struct("AdjacentPairs")
+			.field("iterator", &self.iterator)
+			.finish()
 	}
 }
 
@@ -160,5 +173,22 @@ mod tests {
 		iterator.next();
 		assert_eq!((0, Some(0)), iterator.size_hint());
 		assert!(iterator.next().is_none());
+	}
+
+	#[test]
+	fn should_debug_print() {
+		let array = [1, 2];
+		let iterator = array.iter().adjacent_pairs();
+
+		assert_eq!("AdjacentPairs { iterator: Iter([1, 2]) }", format!("{:?}", iterator));
+		let expected_pretty_debug_output = r#"AdjacentPairs {
+    iterator: Iter(
+        [
+            1,
+            2,
+        ],
+    ),
+}"#;
+		assert_eq!(expected_pretty_debug_output, format!("{:#?}", iterator));
 	}
 }
