@@ -24,6 +24,9 @@ use core::iter::FusedIterator;
 #[cfg(test)]
 mod test_helpers;
 
+/// An iterator over adjacent pairs of values in the underlying `IteratorType`.
+///
+/// This is usually created using [`AdjacentPairIterator::adjacent_pairs`].
 #[derive(Clone)]
 pub struct AdjacentPairs<IteratorType: Iterator> {
 	iterator: IteratorType,
@@ -115,9 +118,11 @@ where
 	}
 }
 
+/// Extends all types implementing [`IntoIterator`] with clonable items with the `adjacent_pairs` method.
 pub trait AdjacentPairIterator {
 	type Iterator: Iterator;
 
+	/// Return an iterator of adjacent pairs in `Self`.
 	fn adjacent_pairs(self) -> AdjacentPairs<Self::Iterator>;
 }
 
