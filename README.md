@@ -1,28 +1,24 @@
-adjacent-pair-iterator
-======================
+# adjacent-pair-iterator
+A library that takes an iterator and turns it into an iterator over adjacent pairs.
 
-**An iterator over adjacent pairs in another iterator.**
+## Minimum rust version (MSRV)
+This library works with Rust versions since 1.31.
 
-Usage
------
-```toml
-[dependencies]
-adjacent-pair-iterator = "0.1.2"
-```
-
+## Example:
 ```rust
-extern crate adjacent_pair_iterator; // 2015 Edition only
-
 use adjacent_pair_iterator::AdjacentPairIterator;
 
-fn main() {
-    let array = [1, 2, 3, 4];
-
-    for pair in array.iter().adjacent_pairs() {
-        println!("{:?}", pair);
-        // (1, 2)
-        // (2, 3)
-        // (3, 4)
-    }
+pub fn main() {
+	let vector = vec![1, 2, 3, 4];
+	for pair in vector.adjacent_pairs() {
+		println!("{:?}", pair);
+	}
 }
+```
+
+Prints:
+```
+(1, 2)
+(2, 3)
+(3, 4)
 ```

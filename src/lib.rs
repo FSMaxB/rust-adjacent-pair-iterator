@@ -1,3 +1,19 @@
+//! # adjacent-pair-iterator
+//! A library that takes an iterator and turns it into an iterator over adjacent pairs.
+//!
+//! ## Example:
+//! ```
+//! use adjacent_pair_iterator::AdjacentPairIterator;
+//!
+//! let vector = vec![1, 2, 3, 4];
+//! let mut iterator = vector.adjacent_pairs();
+//!
+//! assert_eq!((1, 2), iterator.next().unwrap());
+//! assert_eq!((2, 3), iterator.next().unwrap());
+//! assert_eq!((3, 4), iterator.next().unwrap());
+//!
+//! assert_eq!(None, iterator.next());
+//! ```
 use std::fmt::{Debug, Formatter};
 use std::iter::FusedIterator;
 
