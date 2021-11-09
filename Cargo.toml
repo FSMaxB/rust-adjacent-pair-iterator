@@ -9,5 +9,6 @@ repository = "https://github.com/FSMaxB/rust-adjacent-pair-iterator"
 keywords = ["iterator", "iter", "pair", "adjacent"]
 description = "An iterator over adjacent pairs in another iterator."
 readme = "README.md"
+rust-version = "1.31"
 
 [dependencies]

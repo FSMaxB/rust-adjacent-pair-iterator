@@ -1,0 +1,51 @@
+on:
+  push: {}
+  schedule:
+    - cron: '42 2 * * Thu'
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+          components: clippy, rustfmt
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+          profile: minimal
+      - name: Test
+        run: cargo test
+  test_msrv:
+    name: Test with MSRV 1.31
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install MSRV
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.31.0 # 2018 edition
+          default: true
+          profile: minimal
+      - name: Test
+        run: cargo test
