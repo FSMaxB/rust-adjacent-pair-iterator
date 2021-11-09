@@ -35,10 +35,7 @@ impl NoStdString {
 
 impl Debug for NoStdString {
 	fn fmt(&self, formatter: &mut Formatter) -> core::fmt::Result {
-		formatter
-			.debug_tuple(core::any::type_name::<Self>())
-			.field(&self.as_ref())
-			.finish()
+		formatter.debug_tuple("NoStdString").field(&self.as_ref()).finish()
 	}
 }
 
