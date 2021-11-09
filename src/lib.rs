@@ -195,21 +195,24 @@ mod tests {
 		let iterator = array.iter().adjacent_pairs();
 
 		assert_eq!("AdjacentPairs { iterator: Iter([1, 2]) }", format!("{:?}", iterator));
+
+		// NOTE: With stripped commas because this changed between 1.31 and now (1.56)
 		let expected_pretty_debug_output = r#"AdjacentPairs {
     iterator: Iter(
         [
-            1,
-            2,
-        ],
-    ),
+            1
+            2
+        ]
+    )
 }"#;
-		assert_eq!(expected_pretty_debug_output, format!("{:#?}", iterator));
+		let pretty_debug_output_without_commas = format!("{:#?}", iterator).replace(',', "");
+		assert_eq!(expected_pretty_debug_output, pretty_debug_output_without_commas);
 	}
 
 	#[test]
 	fn should_convert_from_iterable() {
-		let array = [1, 2];
-		let mut iterator: AdjacentPairs<_> = From::from(array);
+		let vector = vec![1, 2];
+		let mut iterator: AdjacentPairs<_> = From::from(vector);
 		assert_eq!(Some((1, 2)), iterator.next());
 	}
 }
