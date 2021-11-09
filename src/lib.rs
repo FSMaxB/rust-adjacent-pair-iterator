@@ -11,6 +11,15 @@ impl<IteratorType: Iterator> AdjacentPairs<IteratorType> {
 			last_item: None,
 		}
 	}
+
+	fn remaining_pairs_for_given_size(&self, size: usize) -> usize {
+		let remaining_elements = size + self.last_item.is_some() as usize;
+		if remaining_elements > 0 {
+			remaining_elements - 1
+		} else {
+			0
+		}
+	}
 }
 
 impl<IteratorType> Iterator for AdjacentPairs<IteratorType>
@@ -29,6 +38,14 @@ where
 		let current_item = self.iterator.next()?;
 		self.last_item = Some(current_item.clone());
 		Some((last_item, current_item))
+	}
+
+	fn size_hint(&self) -> (usize, Option<usize>) {
+		let (lower, upper) = self.iterator.size_hint();
+		(
+			self.remaining_pairs_for_given_size(lower),
+			upper.map(|upper| self.remaining_pairs_for_given_size(upper)),
+		)
 	}
 }
 
@@ -110,5 +127,22 @@ mod tests {
 		assert_eq!(Some((1, 2)), iterator.next());
 		assert_eq!(Some((2, 3)), iterator.next());
 		assert_eq!(None, iterator.next());
+	}
+
+	#[test]
+	fn should_update_its_size_hint() {
+		let array = [0; 5];
+		let mut iterator = array.iter().adjacent_pairs();
+
+		assert_eq!((4, Some(4)), iterator.size_hint());
+		iterator.next();
+		assert_eq!((3, Some(3)), iterator.size_hint());
+		iterator.next();
+		assert_eq!((2, Some(2)), iterator.size_hint());
+		iterator.next();
+		assert_eq!((1, Some(1)), iterator.size_hint());
+		iterator.next();
+		assert_eq!((0, Some(0)), iterator.size_hint());
+		assert!(iterator.next().is_none());
 	}
 }
