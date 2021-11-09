@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct AdjacentPairs<IteratorType: Iterator> {
 	iterator: IteratorType,
 	last_item: Option<IteratorType::Item>,
