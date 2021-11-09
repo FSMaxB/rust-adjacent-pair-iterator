@@ -1,3 +1,6 @@
+#![deny(clippy::all)]
+#![deny(clippy::pedantic)]
+#![deny(warnings)]
 //! # adjacent-pair-iterator
 //! A library that takes an iterator and turns it into an iterator over adjacent pairs.
 //!
