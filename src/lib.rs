@@ -7,7 +7,11 @@ pub struct AdjacentPairs<IteratorType: Iterator> {
 	last_item: Option<IteratorType::Item>,
 }
 
-impl<IteratorType: Iterator> AdjacentPairs<IteratorType> {
+impl<IteratorType> AdjacentPairs<IteratorType>
+where
+	IteratorType: Iterator,
+	IteratorType::Item: Clone,
+{
 	fn new(iterator: IteratorType) -> AdjacentPairs<IteratorType> {
 		AdjacentPairs {
 			iterator,
@@ -78,27 +82,37 @@ where
 {
 }
 
+impl<Iterable> From<Iterable> for AdjacentPairs<Iterable::IntoIter>
+where
+	Iterable: IntoIterator,
+	Iterable::Item: Clone,
+{
+	fn from(iterable: Iterable) -> Self {
+		Self::new(iterable.into_iter())
+	}
+}
+
 pub trait AdjacentPairIterator {
 	type Iterator: Iterator;
 
 	fn adjacent_pairs(self) -> AdjacentPairs<Self::Iterator>;
 }
 
-impl<IteratorType> AdjacentPairIterator for IteratorType
+impl<Iterable> AdjacentPairIterator for Iterable
 where
-	IteratorType: Iterator,
-	IteratorType::Item: Clone,
+	Iterable: IntoIterator,
+	Iterable::Item: Clone,
 {
-	type Iterator = Self;
+	type Iterator = <Self as IntoIterator>::IntoIter;
 
 	fn adjacent_pairs(self) -> AdjacentPairs<Self::Iterator> {
-		AdjacentPairs::new(self)
+		self.into()
 	}
 }
 
 #[cfg(test)]
 mod tests {
-	use crate::AdjacentPairIterator;
+	use crate::{AdjacentPairIterator, AdjacentPairs};
 
 	#[test]
 	fn should_provide_nothing_without_items() {
@@ -151,7 +165,7 @@ mod tests {
 	#[test]
 	fn should_work_with_into_iterator() {
 		let vector = vec![1, 2, 3];
-		let mut iterator = vector.into_iter().adjacent_pairs();
+		let mut iterator = vector.adjacent_pairs();
 
 		assert_eq!(Some((1, 2)), iterator.next());
 		assert_eq!(Some((2, 3)), iterator.next());
@@ -190,5 +204,12 @@ mod tests {
     ),
 }"#;
 		assert_eq!(expected_pretty_debug_output, format!("{:#?}", iterator));
+	}
+
+	#[test]
+	fn should_convert_from_iterable() {
+		let array = [1, 2];
+		let mut iterator: AdjacentPairs<_> = From::from(array);
+		assert_eq!(Some((1, 2)), iterator.next());
 	}
 }
