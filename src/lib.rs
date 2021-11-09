@@ -1,10 +1,10 @@
-pub struct AdjacentPairs<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> {
+pub struct AdjacentPairs<IteratorType: Iterator> {
 	iterator: IteratorType,
-	last_item: Option<ItemType>,
+	last_item: Option<IteratorType::Item>,
 }
 
-impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> AdjacentPairs<IteratorType, ItemType> {
-	fn new(iterator: IteratorType) -> AdjacentPairs<IteratorType, ItemType> {
+impl<IteratorType: Iterator> AdjacentPairs<IteratorType> {
+	fn new(iterator: IteratorType) -> AdjacentPairs<IteratorType> {
 		AdjacentPairs {
 			iterator,
 			last_item: None,
@@ -12,8 +12,12 @@ impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> AdjacentPairs<Ite
 	}
 }
 
-impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> Iterator for AdjacentPairs<IteratorType, ItemType> {
-	type Item = (ItemType, ItemType);
+impl<IteratorType> Iterator for AdjacentPairs<IteratorType>
+where
+	IteratorType: Iterator,
+	IteratorType::Item: Clone,
+{
+	type Item = (IteratorType::Item, IteratorType::Item);
 
 	fn next(&mut self) -> Option<Self::Item> {
 		let last_item = match self.last_item.take() {
@@ -28,17 +32,19 @@ impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> Iterator for Adja
 }
 
 pub trait AdjacentPairIterator {
-	type Item: Clone;
-	type Iterator: Iterator<Item = Self::Item>;
+	type Iterator: Iterator;
 
-	fn adjacent_pairs(self) -> AdjacentPairs<Self::Iterator, Self::Item>;
+	fn adjacent_pairs(self) -> AdjacentPairs<Self::Iterator>;
 }
 
-impl<IteratorType: Iterator<Item = ItemType>, ItemType: Clone> AdjacentPairIterator for IteratorType {
-	type Item = ItemType;
+impl<IteratorType> AdjacentPairIterator for IteratorType
+where
+	IteratorType: Iterator,
+	IteratorType::Item: Clone,
+{
 	type Iterator = Self;
 
-	fn adjacent_pairs(self) -> AdjacentPairs<Self::Iterator, Self::Item> {
+	fn adjacent_pairs(self) -> AdjacentPairs<Self::Iterator> {
 		AdjacentPairs::new(self)
 	}
 }
