@@ -46,7 +46,7 @@ where
 	}
 
 	fn remaining_pairs_for_given_size(&self, size: usize) -> usize {
-		let remaining_elements = size + self.last_item.is_some() as usize;
+		let remaining_elements = size + usize::from(self.last_item.is_some());
 		if remaining_elements > 0 {
 			remaining_elements - 1
 		} else {
